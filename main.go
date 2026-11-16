@@ -27,7 +27,7 @@ func main() {
 	conf.MustLoad(*configFile, &serviceCfg) //解析配置
 
 	switch serviceCfg.Service {
-	case service.EtcdClient:
+	case service.RpcClient:
 		var cfg service.RpcClientConf
 		conf.MustLoad(*configFile, &cfg)
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
@@ -43,7 +43,7 @@ func main() {
 		defer s.Stop()
 		loghelper.GetDefaultLogger().Infof("rpc 客户端启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
 		s.Start()
-	case service.EtcdServer:
+	case service.RpcServer:
 		var cfg service.RpcServerConf
 		conf.MustLoad(*configFile, &cfg)
 		loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
