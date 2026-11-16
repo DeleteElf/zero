@@ -8,11 +8,26 @@
 ```text
 domain-a/
 ├── client/          # 领域客户端 SDK（封装了 etcd 发现、负载均衡与 RPC/HTTP 调用）
-├── domain/          # 领域服务逻辑（不适用etcd时，直接调用）
+├── rest/          # 领域服务逻辑（不适用etcd时，直接调用）
 ├── server/          # 领域服务端逻辑（包含 etcd 服务注册、业务 handler）
 ├── proto/           # 双方契约（Protobuf 定义）
+├── rpc/             # 存放生成rpc通讯逻辑，主要是pb.go和接口
 └── go.mod
 ```
-* domain : 负责直接接入服务。
+* rest : 负责直接接入服务。
 * Server 端：负责监听端口、实现业务逻辑、启动时向 etcd 注册自己。
 * Client 端：由该领域的开发者写好。其他领域如果想调用 Domain A，不需要重新写调用代码，直接 go get 引入 Domain A 的 client 包即可。Client 内部已经内置好了基于 etcd 的服务发现和负载均衡逻辑。
+
+按规范编写的微服务插件，通过import 领域微服务模块+配置文件配置，即可完成加载。
+
+本项目的必须组件：
+```text
+zero-user   用户与权限管理
+zero-web-core web框架内核
+zero-core 框架内核
+```
+
+本项目的必须组件：
+```text
+zero-file 文件管理
+```

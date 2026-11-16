@@ -1,7 +1,6 @@
 module github.com/DeleteElf/zero
 
-go 1.25.9
+go 1.26.11
 require (
-	github.com/zeromicro/go-zero v1.7.3
-	gorm.io/gorm v1.25.12
+	github.com/zeromicro/go-zero v1.10.3
 )
