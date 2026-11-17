@@ -3,12 +3,17 @@ package main
 import (
 	"flag"
 
+	"github.com/DeleteElf/zero-user/client/rpc/characterclient"
+	"github.com/DeleteElf/zero-user/client/rpc/userclient"
 	"github.com/DeleteElf/zero-user/middleware"
+	"github.com/DeleteElf/zero-user/rest/routes"
 	"github.com/DeleteElf/zero-user/rpchandles/character"
 	"github.com/DeleteElf/zero-user/rpchandles/user"
 	"github.com/DeleteElf/zero-user/server/rpc/charactersever"
 	"github.com/DeleteElf/zero-user/server/rpc/userserver"
 	"github.com/DeleteElf/zero-web-core/ctx"
+	"github.com/zeromicro/go-zero/core/service"
+	"google.golang.org/grpc/reflection"
 
 	"github.com/deleteelf/zero-core/utils/loghelper"
 	"github.com/zeromicro/go-zero/core/conf"
@@ -30,13 +35,26 @@ func main() {
 		conf.MustLoad(*configFile, &cfg)
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
 		sc := ctx.NewServiceContext(&cfg)
-
 		sc.Middlewares["Auth"] = middleware.NewAuthInterceptor(sc.RedisClient).Handle
 		if cfg.Plugins["user"] {
-			//user.RegisterHandlers(s, sc)
+			sc.Services["user"] = ctx.ServiceObject{
+				Name:               "UserServicePlugin",
+				Version:            "1.0",
+				Enabled:            true,
+				SupportServiceType: ctx.RpcClient,
+				Service:            userclient.NewUserService(zrpc.MustNewClient(cfg.RpcClientConf)), //需要对每个rpc服务进行注册
+			}
+			routes.RegisterUserHandlers(s, sc)
 		}
 		if cfg.Plugins["character"] {
-			//character.RegisterHandlers(s, sc) //多个服务要分别注册
+			sc.Services["character"] = ctx.ServiceObject{
+				Name:               "CharacterServicePlugin",
+				Version:            "1.0",
+				Enabled:            true,
+				SupportServiceType: ctx.RpcClient,
+				Service:            characterclient.NewCharacterService(zrpc.MustNewClient(cfg.RpcClientConf)), //需要对每个rpc服务进行注册
+			}
+			routes.RegisterCharacterHandlers(s, sc)
 		}
 		defer s.Stop()
 		loghelper.GetDefaultLogger().Infof("rpc 客户端启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
@@ -55,9 +73,9 @@ func main() {
 			if cfg.Plugins["character"] {
 				character.RegisterCharacterServiceServer(grpcServer, charactersever.NewCharacterService(sc))
 			}
-			//if cfg.Mode == service.DevMode || cfg.Mode == service.TestMode {
-			//	reflection.Register(grpcServer)
-			//}
+			if cfg.Mode == service.DevMode || cfg.Mode == service.TestMode {
+				reflection.Register(grpcServer)
+			}
 		})
 		defer s.Stop()
 		loghelper.GetDefaultLogger().Infof("rpc服务启动！！！监听地址%s...", cfg.ListenOn)
@@ -70,13 +88,12 @@ func main() {
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
 		sc := ctx.NewServiceContext(cfg)
 		sc.Middlewares["auth"] = middleware.NewAuthInterceptor(sc.RedisClient).Handle
-		//if cfg.Plugins["user"] {
-		//	user.RegisterHandlers(s, sc)
-		//}
-		//if cfg.Plugins["character"] {
-		//	character.RegisterHandlers(s, sc) //多个服务要分别注册
-		//}
-
+		if cfg.Plugins["user"] {
+			routes.RegisterUserHandlers(s, sc)
+		}
+		if cfg.Plugins["character"] {
+			routes.RegisterCharacterHandlers(s, sc)
+		}
 		defer s.Stop()
 		loghelper.GetDefaultLogger().Infof("网站启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
 		s.Start()

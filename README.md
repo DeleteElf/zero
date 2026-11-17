@@ -16,7 +16,7 @@ domain-a/
 ├──────── rpc/      # 用于生成rpc服务的服务定义文件，主要是双方契约（Protobuf 定义）    
 ├── rest/           # 领域服务逻辑（负责直接接入服务，网站直接调用，rpc客户端也会服用此逻辑）
 ├──────── action/   # 存放通过api生成的logic目录内的内容，这里已经将同领域的方法合并到一个文件内。
-├──────── handler/  # 存放通过api生成的routes.go，并把所有的需要调用的handler已经合并到一个文件内。
+├──────── routes/   # 存放通过api生成的routes.go，并把所有的需要调用的handler已经合并到一个文件内。
 ├── rpchandles/     # 存放生成rpc通讯逻辑，主要是pb.go和接口
 ├── server/         # 领域服务端逻辑（包含 etcd 服务注册、业务 handler）
 ├──────── action/   # 存放通过proto生成的logic目录内的内容，这里已经将同领域的方法合并到一个文件内。
