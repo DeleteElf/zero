@@ -39,6 +39,7 @@ func main() {
 		var cfg ctx.RpcClientConf
 		conf.MustLoad(*configFile, &cfg)
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
+		loghelper.Info("日志系统启动！！！")
 		sc := ctx.NewServiceContext(&cfg)
 		sc.Middlewares["Auth"] = middleware.NewAuthInterceptor(sc.RedisClient).Handle
 		if cfg.Plugins["user"] {
@@ -72,14 +73,14 @@ func main() {
 			fileroute.RegisterFileHandlers(s, sc)
 		}
 		defer s.Stop()
-		loghelper.GetDefaultLogger().Infof("rpc 客户端启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
+		loghelper.Infof("rpc 客户端启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
 		s.Start()
 	case ctx.RpcServer:
 		var cfg ctx.RpcServerConf
 		conf.MustLoad(*configFile, &cfg)
-		loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
-		loghelper.GetDefaultLogger().Info("数据库日志系统启动！！！")
+		//loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
 		sc := ctx.NewServiceContext(cfg)
+		loghelper.Info("日志系统启动！！！")
 		s := zrpc.MustNewServer(cfg.RpcServerConf, func(grpcServer *grpc.Server) {
 			//在这里进行多个服务的实际注册
 			if cfg.Plugins["user"] {
@@ -96,14 +97,15 @@ func main() {
 			}
 		})
 		defer s.Stop()
-		loghelper.GetDefaultLogger().Infof("rpc服务启动！！！监听地址%s...", cfg.ListenOn)
+		loghelper.Infof("rpc服务启动！！！监听地址%s...", cfg.ListenOn)
 		s.Start()
 	case ctx.Rest:
 		var cfg ctx.RestConf
 		conf.MustLoad(*configFile, &cfg)
-		loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
-		loghelper.GetDefaultLogger().Info("数据库日志系统启动！！！")
+		//loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
+
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
+		loghelper.Info("日志系统启动！！！")
 		sc := ctx.NewServiceContext(cfg)
 		sc.Middlewares["auth"] = middleware.NewAuthInterceptor(sc.RedisClient).Handle
 		if cfg.Plugins["user"] {
@@ -116,7 +118,7 @@ func main() {
 			fileroute.RegisterFileHandlers(s, sc)
 		}
 		defer s.Stop()
-		loghelper.GetDefaultLogger().Infof("网站启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
+		loghelper.Infof("网站启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
 		s.Start()
 	}
 }
