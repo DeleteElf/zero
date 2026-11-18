@@ -24,7 +24,7 @@ Log:
 #一天1440分钟， 86400等于1天
 #TokenReplaceTime: 86400
 DbConfig:
-  ConnectionString: "host=localhost user=postgres dbname=postgis_new password=pgdb123 port=5432 sslmode=disable"
+  ConnectionString: "host=localhost user=postgres dbname=postgis_demo password=pgdb123 port=5432 sslmode=disable"
   # 支持postgres、oracle、mysql等，默认支持postgres
   DbType: postgres
   SafeColumn: true
