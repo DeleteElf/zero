@@ -6,16 +6,17 @@ Port: 8888
 #服务类型 Website 1 EtcdClient 2 EtcdServer 4,如果没有配置，默认是Website 1
 #Service: 1
 Log:
-  ServiceName: my-service        # 日志中标记的服务名
-  Mode: console                     # console | file | volume
-  Encoding: plain                # json | plain（plain 可读性好，json 适合采集）
-  Level: debug                   # error | severe | slow | info | stat | debug
-  Path: logs                     # 日志目录（Mode=file 时生效）
-  Compress: true                 # 轮转后压缩
-  Stat: false                    # 是否输出统计日志
-  KeepDays: 7                    # 保留天数
-  MaxBackups: 10                 # 最大备份文件数
-  MaxSize: 100                   # 单文件最大 MB
+  ServiceName: my-service               # 日志中标记的服务名
+  Mode: console                         # console | file | volume
+  Encoding: plain                       # json | plain（plain 可读性好，json 适合采集）
+  Level: debug                          # error | severe | slow | info | stat | debug
+  Path: logs                            # 日志目录（Mode=file 时生效）
+  Compress: true                        # 轮转后压缩
+  Stat: false                           # 是否输出统计日志
+  KeepDays: 7                           # 保留天数
+  MaxBackups: 10                        # 最大备份文件数
+  MaxSize: 100                          # 单文件最大 MB
+  TimeFormat: 2006-01-02 15:04:05.000   # 时间格式
 
 #===========================客户端 或直连 按需===============================
 #设置成30分钟 1800
@@ -29,7 +30,7 @@ DbConfig:
   DbType: postgres
   SafeColumn: true
   #	数据库专用日志 Silent 1 Error 2 Warn 3 Info 4
-  #  LogLevel: 2
+  LogLevel: 4
   SkipDefaultTransaction: true
 #===========================服务端 按需===============================
 Etcd:
@@ -50,5 +51,6 @@ Redis:
   key: website-demo
 #配置需要用到的微服务插件
 Plugins:
+  user: true
+  character: true
   file: true
-  pay: true
