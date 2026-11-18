@@ -3,10 +3,15 @@ package main
 import (
 	"flag"
 
+	"github.com/DeleteElf/zero-file/client/rpc/fileclient"
+	"github.com/DeleteElf/zero-file/rest/routes/fileroute"
+	"github.com/DeleteElf/zero-file/rpchandles/file"
+	"github.com/DeleteElf/zero-file/server/rpc/fileserver"
 	"github.com/DeleteElf/zero-user/client/rpc/characterclient"
 	"github.com/DeleteElf/zero-user/client/rpc/userclient"
 	"github.com/DeleteElf/zero-user/middleware"
-	"github.com/DeleteElf/zero-user/rest/routes"
+	"github.com/DeleteElf/zero-user/rest/routes/characterroute"
+	"github.com/DeleteElf/zero-user/rest/routes/userroute"
 	"github.com/DeleteElf/zero-user/rpchandles/character"
 	"github.com/DeleteElf/zero-user/rpchandles/user"
 	"github.com/DeleteElf/zero-user/server/rpc/charactersever"
@@ -44,7 +49,7 @@ func main() {
 				SupportServiceType: ctx.RpcClient,
 				Service:            userclient.NewUserService(zrpc.MustNewClient(cfg.RpcClientConf)), //需要对每个rpc服务进行注册
 			}
-			routes.RegisterUserHandlers(s, sc)
+			userroute.RegisterUserHandlers(s, sc)
 		}
 		if cfg.Plugins["character"] {
 			sc.Services["character"] = ctx.ServiceObject{
@@ -54,7 +59,17 @@ func main() {
 				SupportServiceType: ctx.RpcClient,
 				Service:            characterclient.NewCharacterService(zrpc.MustNewClient(cfg.RpcClientConf)), //需要对每个rpc服务进行注册
 			}
-			routes.RegisterCharacterHandlers(s, sc)
+			characterroute.RegisterCharacterHandlers(s, sc)
+		}
+		if cfg.Plugins["file"] {
+			sc.Services["file"] = ctx.ServiceObject{
+				Name:               "FileServicePlugin",
+				Version:            "1.0",
+				Enabled:            true,
+				SupportServiceType: ctx.RpcClient,
+				Service:            fileclient.NewFileService(zrpc.MustNewClient(cfg.RpcClientConf)), //需要对每个rpc服务进行注册
+			}
+			fileroute.RegisterFileHandlers(s, sc)
 		}
 		defer s.Stop()
 		loghelper.GetDefaultLogger().Infof("rpc 客户端启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
@@ -73,6 +88,9 @@ func main() {
 			if cfg.Plugins["character"] {
 				character.RegisterCharacterServiceServer(grpcServer, charactersever.NewCharacterService(sc))
 			}
+			if cfg.Plugins["file"] {
+				file.RegisterFileServiceServer(grpcServer, fileserver.NewFileService(sc))
+			}
 			if cfg.Mode == service.DevMode || cfg.Mode == service.TestMode {
 				reflection.Register(grpcServer)
 			}
@@ -89,10 +107,13 @@ func main() {
 		sc := ctx.NewServiceContext(cfg)
 		sc.Middlewares["auth"] = middleware.NewAuthInterceptor(sc.RedisClient).Handle
 		if cfg.Plugins["user"] {
-			routes.RegisterUserHandlers(s, sc)
+			userroute.RegisterUserHandlers(s, sc)
 		}
 		if cfg.Plugins["character"] {
-			routes.RegisterCharacterHandlers(s, sc)
+			characterroute.RegisterCharacterHandlers(s, sc)
+		}
+		if cfg.Plugins["file"] {
+			fileroute.RegisterFileHandlers(s, sc)
 		}
 		defer s.Stop()
 		loghelper.GetDefaultLogger().Infof("网站启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
