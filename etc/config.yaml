@@ -45,7 +45,7 @@ ServerRpc:
     Key: server.rpc
 #===========================redis 按需===============================
 Redis:
-  Host: 127.0.0.1:6379
+  Host: 192.168.199.159:6379
   Type: node
   Tls: false
   key: website-demo

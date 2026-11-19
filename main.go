@@ -123,8 +123,3 @@ func main() {
 		s.Start()
 	}
 }
-
-//func loadPlugins(service *rest.Server, cfg config.Config) {
-//	sc := service.NewServiceContext(cfg)
-//	sc.InitPlugin(service, nil) //这里初始化插件，如果配置没有启用，则不会实际加载插件
-//}
