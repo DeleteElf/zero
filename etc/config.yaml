@@ -38,6 +38,18 @@ RpcServerConfig:
     Hosts:
       - 127.0.0.1:2379
     Key: service-server.rpc
+  Log:                                    # 这里需要注意，服务端启动，我们为了解决节点冲突问题，日志这里需要再配置一遍
+    ServiceName: my-service               # 日志中标记的服务名
+    Mode: console                         # console | file | volume
+    Encoding: plain                       # json | plain（plain 可读性好，json 适合采集）
+    Level: debug                           # error | severe | info | debug
+    Path: logs                            # 日志目录（Mode=file 时生效）
+    Compress: true                        # 轮转后压缩
+    Stat: false                           # 是否输出统计日志
+    KeepDays: 7                           # 保留天数
+    MaxBackups: 10                        # 最大备份文件数
+    MaxSize: 100                          # 单文件最大 MB
+    TimeFormat: 2006-01-02 15:04:05.000   # 时间格式
 #===========================客户端 按需===============================
 RpcClientConfig:
   Etcd:
