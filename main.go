@@ -20,7 +20,7 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 	"google.golang.org/grpc/reflection"
 
-	"github.com/deleteelf/zero-core/utils/loghelper"
+	"github.com/DeleteElf/zero-core/utils/loghelper"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
