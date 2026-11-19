@@ -105,7 +105,8 @@ func main() {
 		//loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
 
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
-		loghelper.Info("日志系统启动！！！")
+		loghelper.InitLog()
+
 		sc := ctx.NewServiceContext(cfg)
 		sc.Middlewares["auth"] = middleware.NewAuthInterceptor(sc.RedisClient).Handle
 		if cfg.Plugins["user"] {
