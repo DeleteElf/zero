@@ -81,7 +81,7 @@ func main() {
 		//loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
 		sc := ctx.NewServiceContext(cfg)
 		loghelper.InitLog()
-		s := zrpc.MustNewServer(cfg.RpcServerConfig, func(grpcServer *grpc.Server) {
+		s := zrpc.MustNewServer(cfg.RpcServerConf, func(grpcServer *grpc.Server) {
 			//在这里进行多个服务的实际注册
 			if cfg.Plugins["user"] {
 				user.RegisterUserServiceServer(grpcServer, userserver.NewUserService(sc))
@@ -92,12 +92,12 @@ func main() {
 			if cfg.Plugins["file"] {
 				file.RegisterFileServiceServer(grpcServer, fileserver.NewFileService(sc))
 			}
-			if cfg.RpcServerConfig.Mode == service.DevMode || cfg.RpcServerConfig.Mode == service.TestMode {
+			if cfg.Mode == service.DevMode || cfg.Mode == service.TestMode {
 				reflection.Register(grpcServer)
 			}
 		})
 		defer s.Stop()
-		loghelper.Infof("rpc服务启动！！！监听地址%s...", cfg.RpcServerConfig.ListenOn)
+		loghelper.Infof("rpc服务启动！！！监听地址%s...", cfg.ListenOn)
 		s.Start()
 	case ctx.Rest:
 		var cfg ctx.RestConf
