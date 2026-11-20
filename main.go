@@ -27,13 +27,21 @@ import (
 	"google.golang.org/grpc"
 )
 
-var configFile = flag.String("f", "etc/config.yaml", "主配置文件")
+var (
+	configFile  = flag.String("f", "etc/config.yaml", "主配置文件")
+	serviceType = flag.Int("t", 0, "服务类型: 1=HTTP服务 2=RPC客户端 4=RPC服务")
+)
 
 func main() {
 	flag.Parse() //读取配置文件
 	var serviceCfg ctx.ServiceConf
 	conf.MustLoad(*configFile, &serviceCfg) //解析配置
-
+	if *serviceType > 0 {                   //如果传递了参数，否则仍使用配置文件
+		// ./zero -f etc/config.yaml -t 1    # HTTP 服务
+		// ./zero -f etc/config.yaml -t 2    # RPC 客户端
+		// ./zero -f etc/config.yaml -t 4    # RPC 服务
+		serviceCfg.ServiceType = ctx.ServiceType(*serviceType) //命令行优先级高于配置文件，这样我们可以通过命令行来启动不同的形态
+	}
 	switch serviceCfg.ServiceType {
 	case ctx.RpcClient:
 		var cfg ctx.RpcClientConf
