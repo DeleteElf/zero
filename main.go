@@ -27,6 +27,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// 定义支持传入的参数
 var (
 	configFile  = flag.String("f", "etc/config.yaml", "主配置文件")
 	serviceType = flag.Int("t", 0, "服务类型: 1=HTTP服务 2=RPC客户端 4=RPC服务")
