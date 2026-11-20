@@ -1,5 +1,5 @@
 #服务类型 Website 1 EtcdClient 2 EtcdServer 4,如果没有配置，默认是Website 1
-ServiceType: 2
+ServiceType: 1
 Name: zero-service
 #Host: 0.0.0.0
 Port: 8888
