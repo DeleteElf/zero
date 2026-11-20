@@ -70,6 +70,9 @@ go env -w GOPRIVATE=github.com/*
 # 或者指定具体组织
 go env -w GOPRIVATE=cgtw.com/service/*,github.com/DeleteElf/*
 
+# 允许http拉取
+go env -w GOINSECURE=cgtw.com/*,github.com/DeleteElf/*
+
 使用自定义模块
 https://go.dev/doc/faq#git_https
 
