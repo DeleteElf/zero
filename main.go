@@ -89,7 +89,6 @@ func main() {
 		conf.MustLoad(*configFile, &cfg)
 		//loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
 		sc := ctx.NewServiceContext(cfg)
-		loghelper.InitLog()
 		s := zrpc.MustNewServer(cfg.RpcServerConf, func(grpcServer *grpc.Server) {
 			//在这里进行多个服务的实际注册
 			if cfg.Plugins["user"] {
@@ -105,6 +104,7 @@ func main() {
 				reflection.Register(grpcServer)
 			}
 		})
+		loghelper.InitLog() //要读取完RpcServerConf 后才能正确打印日志！
 		defer s.Stop()
 		loghelper.Infof("rpc服务启动！！！监听地址%s...", cfg.ListenOn)
 		s.Start()
