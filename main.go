@@ -87,7 +87,6 @@ func main() {
 	case ctx.RpcServer:
 		var cfg ctx.RpcServerConf
 		conf.MustLoad(*configFile, &cfg)
-		//loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
 		sc := ctx.NewServiceContext(cfg)
 		s := zrpc.MustNewServer(cfg.RpcServerConf, func(grpcServer *grpc.Server) {
 			//在这里进行多个服务的实际注册
@@ -111,8 +110,6 @@ func main() {
 	case ctx.Rest:
 		var cfg ctx.RestConf
 		conf.MustLoad(*configFile, &cfg)
-		//loghelper.GetLogManager().Init(loghelper.LogLevel(cfg.DbConfig.LogLevel)) //初始化数据库专属日志系统
-
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
 		loghelper.InitLog()
 
