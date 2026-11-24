@@ -1,0 +1,196 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "登录",
+        "operationId": "LoginHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/user/changePwd": {
+      "post": {
+        "summary": "修改用户密码",
+        "operationId": "ChangePwdHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChangePwdRequest"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/user/info/{id}": {
+      "get": {
+        "summary": "获取用户信息",
+        "operationId": "UserInfoHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/user/logout": {
+      "get": {
+        "summary": "登出",
+        "operationId": "LogoutHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ChangePwdRequest": {
+      "type": "object",
+      "properties": {
+        "oldPwd": {
+          "type": "string",
+          "description": "旧密码"
+        },
+        "newPwd": {
+          "type": "string",
+          "description": "新密码"
+        },
+        "rePwd": {
+          "type": "string",
+          "description": "重复新密码"
+        }
+      },
+      "title": "ChangePwdRequest"
+    },
+    "IdRequest": {
+      "type": "object",
+      "title": "IdRequest"
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "description": "设置请求的格式要求,如果需要使用用户名或邮箱，也通过此字段传输"
+        },
+        "pwd": {
+          "type": "string",
+          "description": "因为支持两种格式，因此两种都要设置optional，后续在handler内校验非空，如果不这么做，则必须分开设置两个type，这里仅作为教学"
+        },
+        "t": {
+          "type": "integer",
+          "format": "int32",
+          "default": "0",
+          "description": "0 表示account 1表示username 2表示email"
+        }
+      },
+      "title": "LoginRequest",
+      "required": [
+        "t"
+      ]
+    },
+    "Response": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Response生成后，需要从types.go里删除，我们全局只需要一个，引用base."
+        },
+        "message": {
+          "type": "string",
+          "description": "设置应答的格式"
+        },
+        "result": {
+          "type": "string"
+        }
+      },
+      "title": "Response",
+      "required": [
+        "code"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

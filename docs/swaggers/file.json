@@ -1,0 +1,362 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/file/download/{id}": {
+      "get": {
+        "summary": "下载文件（返回文件流）\n根据文件ID下载文件，返回二进制文件流。响应头 Content-Disposition 携带文件名。",
+        "operationId": "DownloadHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "file"
+        ]
+      }
+    },
+    "/file/info/{id}": {
+      "get": {
+        "summary": "获取文件信息\n根据文件ID查询文件的详细信息，包括文件名、大小、MD5、业务类型、版本等。",
+        "operationId": "FileInfoHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "file"
+        ]
+      }
+    },
+    "/file/type/add": {
+      "post": {
+        "summary": "新增文件业务类型\n创建新的文件业务类型，需指定类型名称和允许的文件格式。",
+        "operationId": "AddFileTypeHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FileTypeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "file"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/file/type/del/{id}": {
+      "get": {
+        "summary": "删除文件类型\n根据 ID 删除文件业务类型。删除后该类型下的文件不再参与 MD5 查重。",
+        "operationId": "DeleteFileTypeHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "file"
+        ]
+      }
+    },
+    "/file/type/edit/{id}": {
+      "post": {
+        "summary": "编辑文件业务类型\n修改已有文件业务类型的配置信息，根据 ID 定位记录。",
+        "operationId": "EditFileTypeHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FileTypeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "file"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/file/type/typeinfo/{id}": {
+      "get": {
+        "summary": "获取文件类型信息\n根据 ID 查询文件业务类型的详细配置。",
+        "operationId": "FileTypeInfoHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "file"
+        ]
+      }
+    },
+    "/file/update": {
+      "get": {
+        "summary": "获取更新文件清单\n根据业务类型和版本范围查询文件列表。from、to 为可选参数，不传则返回该业务类型下全部文件。",
+        "operationId": "UpdateVersionHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "description": "业务类型，如 meeting、cms",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "from",
+            "description": "起始版本号（含），如 1.0.0，可选",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "description": "结束版本号（含），如 2.0.0，可选",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "file"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/file/upload": {
+      "post": {
+        "summary": "上传文件（multipart/form-data）\n上传文件到指定业务类型目录。支持的压缩包格式：zip、rar、7z、tar、tar.gz、tar.bz2、gz、bz2、xz、zst。\n同业务类型内自动进行 MD5 查重，重复文件直接返回已有记录（isDuplicate=true）。\n请求体使用 multipart/form-data，file 字段携带文件流，type 字段指定业务类型。",
+        "operationId": "UploadHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UploadRequest"
+            }
+          }
+        ],
+        "tags": [
+          "file"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "FileTypeRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "业务类型名称，如 meeting、cms"
+        },
+        "formats": {
+          "type": "string",
+          "description": "允许的文件格式，逗号分隔，如 zip,rar,7z"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "description": "单文件大小上限（MB）"
+        },
+        "path": {
+          "type": "string",
+          "description": "自定义存储子目录名，默认与 Name 相同"
+        },
+        "active": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "是否启用，true=启用，false=禁用"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int8",
+          "description": "排序值，数值越大越靠前"
+        },
+        "remark": {
+          "type": "string",
+          "description": "备注说明"
+        }
+      },
+      "title": "FileTypeRequest"
+    },
+    "IdRequest": {
+      "type": "object",
+      "title": "IdRequest"
+    },
+    "Response": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "状态码，\"0\" 表示成功，\"-1\" 表示失败"
+        },
+        "message": {
+          "type": "string",
+          "description": "提示信息"
+        },
+        "result": {
+          "type": "string",
+          "description": "业务数据（JSON 字符串）"
+        }
+      },
+      "title": "Response",
+      "required": [
+        "code"
+      ]
+    },
+    "UpdateVersionRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "业务类型，如 meeting、cms"
+        },
+        "from": {
+          "type": "string",
+          "description": "起始版本号（含），如 1.0.0，可选"
+        },
+        "to": {
+          "type": "string",
+          "description": "结束版本号（含），如 2.0.0，可选"
+        }
+      },
+      "title": "UpdateVersionRequest"
+    },
+    "UploadRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "业务类型，必传，如 meeting、cms"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "自定义文件名（含扩展名），不传则使用原始文件名"
+        }
+      },
+      "title": "UploadRequest"
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

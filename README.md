@@ -188,6 +188,16 @@ go get github.com/nicksnyder/go-i18n/v2@latest
 admin123 0192023a7bbd73250516f069df18b500
 ```
 
+#### 导出swagger
+```shell
+#安装导出插件
+go install github.com/zeromicro/goctl-swagger@latest
+
+#生成命令
+goctl api plugin -plugin goctl-swagger="swagger -filename demo.json" -api demo.api -dir.
+goctl api plugin -plugin goctl-swagger="swagger -filename ../../zero/docs/swaggers/user.json" -api ./api/user.api -dir .
+```
+
 #### 问题一：
 该版本的 test.exe 与你运行的 Windows 版本不兼容。请查看计算机的系统信息，然后联系软件发布者
 

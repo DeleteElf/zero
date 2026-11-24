@@ -17,6 +17,7 @@ import (
 	"github.com/DeleteElf/zero-user/server/rpc/charactersever"
 	"github.com/DeleteElf/zero-user/server/rpc/userserver"
 	"github.com/DeleteElf/zero-web-core/ctx"
+	"github.com/DeleteElf/zero-web-core/swagger"
 	"github.com/zeromicro/go-zero/core/service"
 	"google.golang.org/grpc/reflection"
 
@@ -123,6 +124,9 @@ func main() {
 		}
 		if cfg.Plugins["file"] {
 			fileroute.RegisterFileHandlers(s, sc)
+		}
+		if cfg.GetSwaggerConf().Enabled {
+			swagger.RegisterFileHandlers(s, sc)
 		}
 		defer s.Stop()
 		loghelper.Infof("网站启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
