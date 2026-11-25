@@ -17,7 +17,7 @@ Log:
   TimeFormat: 2006-01-02 15:04:05.000   # 时间格式
 Swagger:
   Enabled: true
-  Home: /docs/swaggers  #配置的是访问路径，从网站根目录开始
+  Home: /docs/swaggers/v2  #配置的是访问路径，从网站根目录开始
   Directory: docs/swaggers #配置的文件路径，注意要遵守绝对路径原则，参考c#的combine
   Models:
     file: file.json
