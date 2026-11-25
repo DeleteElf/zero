@@ -17,10 +17,11 @@ Log:
   TimeFormat: 2006-01-02 15:04:05.000   # 时间格式
 Swagger:
   Enabled: true
-  Home: /docs/swaggers
+  Home: /docs/swaggers  #配置的是访问路径，从网站根目录开始
+  Directory: docs/swaggers #配置的文件路径，注意要遵守绝对路径原则，参考c#的combine
   Models:
-    file: docs/swaggers/file.json
-    user: docs/swaggers/user.json
+    file: file.json
+    user: user.json
 #===========================客户端 或直连 按需===============================
 #设置成30分钟 1800
 #SessionTime: 1800
