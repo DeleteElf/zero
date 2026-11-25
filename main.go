@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 
+	"github.com/DeleteElf/zero-file/business"
 	"github.com/DeleteElf/zero-file/client/rpc/fileclient"
 	"github.com/DeleteElf/zero-file/rest/routes/fileroute"
 	"github.com/DeleteElf/zero-file/rpchandles/file"
@@ -34,6 +35,10 @@ var (
 	serviceType = flag.Int("t", 0, "服务类型: 1=HTTP服务 2=RPC客户端 4=RPC服务")
 )
 
+type AppPluginConfig struct {
+	File business.FileConf //按需的插件配置，通过RegisterHandlers的扩展独立参数传入
+}
+
 func main() {
 	flag.Parse() //读取配置文件
 	var serviceCfg ctx.ServiceConf
@@ -44,6 +49,8 @@ func main() {
 		// ./zero -f etc/config.yaml -t 4    # RPC 服务
 		serviceCfg.ServiceType = ctx.ServiceType(*serviceType) //命令行优先级高于配置文件，这样我们可以通过命令行来启动不同的形态
 	}
+	var appCfg AppPluginConfig
+	conf.MustLoad(*configFile, &appCfg) //加载app插件配置
 	switch serviceCfg.ServiceType {
 	case ctx.RpcClient:
 		var cfg ctx.RpcClientConf
@@ -80,7 +87,7 @@ func main() {
 				SupportServiceType: ctx.RpcClient,
 				Service:            fileclient.NewFileService(zrpc.MustNewClient(cfg.RpcClientConfig)), //需要对每个rpc服务进行注册
 			}
-			fileroute.RegisterFileHandlers(s, sc)
+			fileroute.RegisterFileHandlers(s, sc, appCfg.File)
 		}
 		defer s.Stop()
 		loghelper.Infof("rpc 客户端启动！！！监听地址%s:%d...", cfg.Host, cfg.Port)
@@ -123,7 +130,7 @@ func main() {
 			characterroute.RegisterCharacterHandlers(s, sc)
 		}
 		if cfg.Plugins["file"] {
-			fileroute.RegisterFileHandlers(s, sc)
+			fileroute.RegisterFileHandlers(s, sc, appCfg.File)
 		}
 		if cfg.GetSwaggerConf().Enabled {
 			swagger.RegisterFileHandlers(s, sc)

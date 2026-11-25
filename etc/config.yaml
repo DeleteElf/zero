@@ -27,7 +27,7 @@ Swagger:
 #SessionTime: 1800
 #===========================服务端 或直连 按需===============================
 #一天1440分钟， 86400等于1天
-#TokenReplaceTime: 86400
+TokenReplaceTime: 31536000
 DbConfig:
   ConnectionString: "host=localhost user=postgres dbname=postgis_demo password=pgdb123 port=5432 sslmode=disable"
   # 支持postgres、oracle、mysql等，默认支持postgres
@@ -59,3 +59,5 @@ Plugins:
   user: true
   character: true
   file: true
+File:
+  Directory: /upload

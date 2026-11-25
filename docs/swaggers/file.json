@@ -40,6 +40,31 @@
         ]
       }
     },
+    "/file/del/{id}": {
+      "get": {
+        "summary": "删除文件\n根据 ID 删除文件。删除后该类型下的文件不再参与 MD5 查重。",
+        "operationId": "DeleteFileHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "file"
+        ]
+      }
+    },
     "/file/info/{id}": {
       "get": {
         "summary": "获取文件信息\n根据文件ID查询文件的详细信息，包括文件名、大小、MD5、业务类型、版本等。",
@@ -97,7 +122,7 @@
     },
     "/file/type/del/{id}": {
       "get": {
-        "summary": "删除文件类型\n根据 ID 删除文件业务类型。删除后该类型下的文件不再参与 MD5 查重。",
+        "summary": "删除文件类型\n根据 ID 删除文件业务类型。",
         "operationId": "DeleteFileTypeHandler",
         "responses": {
           "200": {
@@ -341,14 +366,18 @@
       "properties": {
         "type": {
           "type": "string",
-          "description": "业务类型，必传，如 meeting、cms"
+          "default": "file",
+          "description": "业务类型，必传，如 meeting、cms,默认是file，通用类型"
         },
         "file": {
           "type": "file",
           "description": "自定义文件名（含扩展名），不传则使用原始文件名"
         }
       },
-      "title": "UploadRequest"
+      "title": "UploadRequest",
+      "required": [
+        "file"
+      ]
     }
   },
   "securityDefinitions": {
