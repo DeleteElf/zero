@@ -58,7 +58,7 @@ func main() {
 		s := rest.MustNewServer(cfg.RestConf) //初始化服务
 		loghelper.InitLog()
 		sc := ctx.NewServiceContext(&cfg)
-		sc.Middlewares["Auth"] = middleware.NewAuthInterceptor(sc.RedisClient, cfg.SessionTime).Handle
+		sc.Middlewares["Auth"] = middleware.NewAuthInterceptor(sc.RedisClient, cfg.SessionTime, cfg.GetDbConfig()).Handle
 		if cfg.Plugins["user"] {
 			sc.Services["user"] = ctx.ServiceObject{
 				Name:               "UserServicePlugin",
@@ -122,7 +122,7 @@ func main() {
 		loghelper.InitLog()
 
 		sc := ctx.NewServiceContext(cfg)
-		sc.Middlewares["auth"] = middleware.NewAuthInterceptor(sc.RedisClient, cfg.SessionTime).Handle
+		sc.Middlewares["auth"] = middleware.NewAuthInterceptor(sc.RedisClient, cfg.SessionTime, cfg.GetDbConfig()).Handle
 		if cfg.Plugins["user"] {
 			userroute.RegisterUserHandlers(s, sc)
 		}
