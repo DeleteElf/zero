@@ -17,7 +17,8 @@
   "paths": {
     "/login": {
       "post": {
-        "summary": "登录",
+        "summary": "用户登录",
+        "description": "提供用户登录本系统",
         "operationId": "LoginHandler",
         "responses": {
           "200": {
@@ -47,7 +48,8 @@
     },
     "/user/changePwd": {
       "post": {
-        "summary": "修改用户密码",
+        "summary": "用户修改密码",
+        "description": "用户通过提供自己的旧密码、新密码、重复新密码修改本人的登录密码。",
         "operationId": "ChangePwdHandler",
         "responses": {
           "200": {
@@ -78,6 +80,7 @@
     "/user/info/{id}": {
       "get": {
         "summary": "获取用户信息",
+        "description": "通过用户ID获取用户信息",
         "operationId": "UserInfoHandler",
         "responses": {
           "200": {
@@ -102,7 +105,8 @@
     },
     "/user/logout": {
       "get": {
-        "summary": "登出",
+        "summary": "用户登出",
+        "description": "提供用户登出本系统",
         "operationId": "LogoutHandler",
         "responses": {
           "200": {
@@ -168,8 +172,8 @@
       "type": "object",
       "properties": {
         "code": {
-          "type": "string",
-          "description": "Response生成后，需要从types.go里删除，我们全局只需要一个，引用base."
+          "type": "integer",
+          "format": "int32"
         },
         "message": {
           "type": "string",
