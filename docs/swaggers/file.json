@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "文件管理",
-    "version": "1.0"
+    "title": "",
+    "version": ""
   },
   "schemes": [
     "http",
@@ -15,7 +15,7 @@
     "application/json"
   ],
   "paths": {
-    "/download/{id}": {
+    "/download/{type}/{key}": {
       "get": {
         "summary": "下载文件",
         "description": "根据文件ID下载文件，返回二进制文件流。响应头 Content-Disposition 携带文件名。",
@@ -30,7 +30,45 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "file"
+        ]
+      }
+    },
+    "/file/check/{type}/{key}": {
+      "get": {
+        "summary": "比对md5",
+        "description": "用于客户端自己生成md5，提交md5到文件服务检查文件是否存在，如果存在，客户端可以直接返回成功。",
+        "operationId": "CheckFileMd5Handler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
             "in": "path",
             "required": true,
             "type": "string"
@@ -313,15 +351,12 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UploadRequest"
+              "$ref": "#/definitions/UploadRequestPath"
             }
           }
         ],
         "tags": [
           "file"
-        ],
-        "consumes": [
-          "multipart/form-data"
         ]
       }
     }
@@ -390,6 +425,10 @@
         "code"
       ]
     },
+    "TypeKeyRequestPath": {
+      "type": "object",
+      "title": "TypeKeyRequestPath"
+    },
     "UpdateVersionRequest": {
       "type": "object",
       "properties": {
@@ -410,7 +449,21 @@
     },
     "UploadRequest": {
       "type": "object",
-      "title": "UploadRequest"
+      "properties": {
+        "type": {
+          "type": "string",
+          "default": "file",
+          "description": "业务类型，必传，如 meeting、cms,默认是file，通用类型"
+        }
+      },
+      "title": "UploadRequest",
+      "required": [
+        "type"
+      ]
+    },
+    "UploadRequestPath": {
+      "type": "object",
+      "title": "UploadRequestPath"
     }
   },
   "securityDefinitions": {
