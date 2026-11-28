@@ -3,6 +3,8 @@ ServiceType: 1
 Name: zero-service
 #Host: 0.0.0.0
 Port: 8888
+MaxBytes: 1073741824 #  104857600
+
 Log:
   ServiceName: my-service               # 日志中标记的服务名
   Mode: console                         # console | file | volume

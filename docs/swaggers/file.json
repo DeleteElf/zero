@@ -326,7 +326,7 @@
         ]
       }
     },
-    "/file/upload/{type}": {
+    "/file/uploadFile/{type}": {
       "post": {
         "summary": "上传文件",
         "description": "上传文件到指定业务类型目录。支持的压缩包格式：zip、rar、7z、tar、tar.gz、tar.bz2、gz、bz2、xz、zst。\n同业务类型内自动进行 MD5 查重，重复文件直接返回已有记录（isDuplicate=true）。\n请求体使用 multipart/form-data，file 字段携带文件流，type 字段指定业务类型。",
