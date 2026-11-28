@@ -7,7 +7,7 @@ Log:
   ServiceName: my-service               # 日志中标记的服务名
   Mode: console                         # console | file | volume
   Encoding: plain                       # json | plain（plain 可读性好，json 适合采集）
-  Level: debug                           # error | severe | info | debug
+  Level: info                           # error | severe | info | debug
   Path: logs                            # 日志目录（Mode=file 时生效）
   Compress: true                        # 轮转后压缩
   Stat: false                           # 是否输出统计日志
@@ -34,7 +34,7 @@ DbConfig:
   DbType: postgres
   SafeColumn: true
   #	数据库专用日志 Silent 1 Error 2 Warn 3 Info 4
-  LogLevel: 3
+  LogLevel: 4
   SkipDefaultTransaction: true
 #===========================服务端 按需===============================
 ListenOn: 0.0.0.0:9000
@@ -61,3 +61,4 @@ Plugins:
   file: true
 File:
   Directory: /upload
+  Md5: true
