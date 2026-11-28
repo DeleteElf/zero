@@ -36,7 +36,7 @@ var (
 )
 
 type AppPluginConfig struct {
-	File business.FileConf //按需的插件配置，通过RegisterHandlers的扩展独立参数传入
+	File business.FileConf `json:",optional"` //按需的插件配置，通过RegisterHandlers的扩展独立参数传入
 }
 
 func main() {
